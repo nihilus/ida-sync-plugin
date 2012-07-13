@@ -5,7 +5,7 @@
 //  Date     : 19/06/2012
 //  Homepage : http://www.h4ck.org.cn
 //  
-//  License  : Copyright ?2012 火星信息安全研究院
+//  License  : Copyright ?2012 Mars Security
 //
 //  This software is provided 'as-is', without any express or
 //  implied warranty. In no event will the authors be held liable
