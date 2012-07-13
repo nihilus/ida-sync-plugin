@@ -1,0 +1,37 @@
+﻿生成启动时间为 2012-6-19 10:34:16。
+     1>项目“E:\ida 插件\ida_sync\ida_sync_plugin\ida_sync_plugin.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“.\Release\ida_sync_plugin.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /IE:\idasdk62\include /Zi /nologo /W3 /WX- /O2 /Ob1 /Oy- /D __NT__ /D __IDP__ /D NDEBUG /D WIN32 /D _WINDOWS /D _USRDLL /D IDA_SYNC_PLUGIN_EXPORTS /D __NT__ /D __IDP__ /D _VC80_UPGRADE=0x0600 /D _WINDLL /D _MBCS /GF /Gm- /EHsc /MT /GS- /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo".\Release/" /Fd".\Release/vc100.pdb" /Gz /TP /analyze- /errorReport:prompt ida_sync.cpp
+         ida_sync.cpp
+     1>E:\idasdk62\include\pro.h(375): warning C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\time.inl(86) : 参见“ctime”的声明
+     1>E:\idasdk62\include\pro.h(381): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\time.inl(112) : 参见“localtime”的声明
+     1>E:\idasdk62\include\pro.h(400): warning C4996: 'localtime': This function or variable may be unsafe. Consider using localtime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\time.inl(112) : 参见“localtime”的声明
+     1>e:\ida 插件\ida_sync\ida_sync_plugin\IDAconnector.hpp(309): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(325) : 参见“sscanf”的声明
+     1>ida_sync.cpp(189): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(325) : 参见“sscanf”的声明
+     1>ida_sync.cpp(203): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(325) : 参见“sscanf”的声明
+     1>ida_sync.cpp(224): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files\Microsoft Visual Studio 10.0\VC\include\stdio.h(325) : 参见“sscanf”的声明
+     1>C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(990,5): warning MSB8012: TargetPath(E:\ida 插件\ida_sync\ida_sync_plugin\.\Release\ida_sync_plugin.plw) 与 Linker 的 OutputFile 属性值(E:\ida 插件\ida_sync\ida_sync_plugin\Release\ida_sync.plw)不匹配。这可能导致项目生成不正确。若要更正此问题，请确保 $(OutDir)、$(TargetName) 和 $(TargetExt) 属性值与 %(Link.OutputFile) 中指定的值匹配。
+     1>C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppBuild.targets(992,5): warning MSB8012: TargetName(ida_sync_plugin) 与 Linker 的 OutputFile 属性值(ida_sync)不匹配。这可能导致项目生成不正确。若要更正此问题，请确保 $(OutDir)、$(TargetName) 和 $(TargetExt) 属性值与 %(Link.OutputFile) 中指定的值匹配。
+       Link:
+         C:\Program Files\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"Release/ida_sync.plw" /INCREMENTAL:NO /NOLOGO ws2_32.lib E:\idasdk62\lib\x86_win_vc_32\ida.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:".\Release\ida_sync_plugin.plw.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /PDB:".\Release/ida_sync.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\Release/ida_sync.lib" /MACHINE:X86 /DLL .\Release/ida_sync.obj /EXPORT:PLUGIN 
+            正在创建库 .\Release/ida_sync.lib 和对象 .\Release/ida_sync.exp
+         ida_sync_plugin.vcxproj -> E:\ida 插件\ida_sync\ida_sync_plugin\.\Release\ida_sync_plugin.plw
+       Manifest:
+         C:\Program Files\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"Release/ida_sync.plw;#2" /manifest .\Release\ida_sync_plugin.plw.intermediate.manifest
+       FinalizeBuildStatus:
+         正在删除文件“.\Release\ida_sync_plugin.unsuccessfulbuild”。
+         正在对“.\Release\ida_sync_plugin.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\ida 插件\ida_sync\ida_sync_plugin\ida_sync_plugin.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:01.10
