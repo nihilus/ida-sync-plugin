@@ -2,9 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug 32-bit|Win32'">
     <IdaSdkVersion>6.1</IdaSdkVersion>
-    <LocalDebuggerWorkingDirectory>$(IdaBinaryDir)</LocalDebuggerWorkingDirectory>
-    <LocalDebuggerCommand>$(IdaBinaryDir)idaq.exe</LocalDebuggerCommand>
+    <LocalDebuggerWorkingDirectory>E:\IDA 6.2\</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerCommand>E:\IDA 6.2\idaq.exe</LocalDebuggerCommand>
     <SymbolsPath>$(OutDir)</SymbolsPath>
+    <IdaBinaryDir>E:\IDA 6.2\idaq.exe</IdaBinaryDir>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release 32-bit|Win32'">
     <IdaSdkVersion>6.1</IdaSdkVersion>

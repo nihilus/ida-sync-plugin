@@ -1,3 +1,14 @@
+07.18.2012
+    - Client:
+   	 - Add support to Function name ,local name ,argument name change sync
+   	 - Add support to comment automatic sync
+   	 - Change the hotkeys into orginal hotkeys
+   	 - Use hook instead of call for the plugin more times
+	 - Add server_connect config file .Log the connection paramters into the .cfg file with the file name of the idb.
+    - Server:
+    	- Fix the contents bind error  send by server 
+   	- Update the server notice
+
 07.13.2012
     - Ported to IDA 6.xx
     - Add support to breakpoints sync

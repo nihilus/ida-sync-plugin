@@ -48,6 +48,9 @@
 #define IDA_SYNC_COMMAND_BPT_SOFT_DIS	 0x14
 #define IDA_SYNC_COMMAND_BPT_HARD_ENB	 0x16
 #define IDA_SYNC_COMMAND_BPT_HARD_DIS	 0x18
+#define IDA_SYNC_COMMAND_FUNC_NAME		 0x20
+#define IDA_SYNC_COMMAND_NORMAL_NAME	 0x22
+
 
 bool connector_pull         (void);
 bool connector_push         (char *);

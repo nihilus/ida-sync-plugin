@@ -1,0 +1,1 @@
+copy "E:\ida ²å¼þ\ida_sync_obaby\ida_sync_client\IDA_SYNC_PLUGIN\Build\Debug 32-bit\IDA_SYNC_PLUGIN-6.1-d.plw" "E:\IDA 6.2\plugins\IDA_SYNC_PLUGIN.plw" /y

@@ -49,15 +49,19 @@ connections    = []
 log_to_console = True
 
 try:
+    console_log("*****************************************************************************")
+    console_log("*                      IDA Sync Pro Server v2.0                             *")
+    console_log("*             Code by Pedram Amini <pedram.amini@gmail.com>                 *")
+    console_log("*             Fixd and Rebuild By obaby Email: Root@h4ck.ws.                *")
+    console_log("*                       http://www.h4ck.org.cn                              *")
+    console_log("*****************************************************************************\n")    
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((host, port))
     server.listen(1)
 except:
     sys.stderr.write("Unable to bind to %s:%d\n" % (host, port))
     sys.exit(1)
-
-console_log("Server v1.0 ready.\n")
-
+console_log("[*] IDA ProServer v2.0 Ready,Host is %s Port is %s !" % (host, port))
 while (1):
     (client, client_address) = server.accept()
 

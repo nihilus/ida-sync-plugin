@@ -98,7 +98,8 @@ class ida_sync:
                 self.sock.recv(1)
             except:
                 break
-
+            print "[*] data to %s. type %d. @%08x. %s" % (self.username, record.type, record.address, record.data)
+            time.sleep(0.1)
         # reset the last update time.
         self.update_last(username, project)
 

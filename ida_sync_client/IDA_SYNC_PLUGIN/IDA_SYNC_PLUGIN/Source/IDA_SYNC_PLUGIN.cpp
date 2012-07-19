@@ -19,9 +19,11 @@
 
 #include "IDAconnector.hpp"
 
+
+
 // Global Variables:
 int gSdkVersion;
-char gszVersion[]      = "2.0.2.1";
+char gszVersion[]      = "3.0.2.1";
 // Plugin name listed in (Edit | Plugins)
 char gszWantedName[]   = "IDA_SYNC_PLUGIN";
 // plug-in hotkey
@@ -44,6 +46,134 @@ bool GetKernelVersion(char *szBuf, int bufSize)
 		gSdkVersion = 10 * (10*major + minor);
 	return true;
 }
+
+//-----------------------------------------------------------------------------
+// Function:  idp_event_callback
+// Hook the HT_IDB 
+// automatic push the new changed names to the server ,and no more need the extra hotkeys
+//
+int idaapi idp_event_callback (void *user_data,int notif_code,va_list va)
+{
+	char buf     [MAXSTR+128];
+	char newname [MAXSTR];
+	char title   [128];
+	flags_t		 name_flags;
+	func_t       *fct;
+
+
+	memset(buf,     0, sizeof(buf));
+	memset(newname, 0, sizeof(newname));
+	memset(title,   0, sizeof(title));
+
+	ea_t addr = va_arg(va,ea_t);
+
+	switch (notif_code)
+	{
+	case processor_t::rename:
+		break;
+	case processor_t::renamed:
+		//If can't get the function name  it means that current ea is not a function start addr
+		if (get_func_name(addr,newname,sizeof(newname) -1 ) ==NULL) 
+		{
+			get_name(BADADDR,addr,newname,sizeof(newname) -1 );
+			if (!is_my_func_name(newname))	//Check if the name is a dummy name
+			{
+				name_flags = get_flags_novalue(addr);
+				//msg("Name changed at addr %x. and name is %s\n",addr,comment);
+				qsnprintf(buf, sizeof(buf) - 1, "%d:::%08x:::%08x*%s", IDA_SYNC_COMMAND_NORMAL_NAME, addr, name_flags, newname);
+
+				if (connector_push(buf))
+					msg("[*] IDA Sync> Successfully pushed normal name at address 0x%08x to server.\n", addr);
+			}
+			return 0;
+		}
+		//get flags at addr
+		if (!is_my_func_name(newname)) //Check if the function name is a dummy name
+		{
+			fct = get_func(addr);
+			//name_flags = get_flags_novalue(addr);
+			//name_flags = get_func_
+			//msg("Name changed at addr %x. and name is %s\n",addr,comment);
+			qsnprintf(buf, sizeof(buf) - 1, "%d:::%08x:::%08x*%s", IDA_SYNC_COMMAND_FUNC_NAME, addr, fct->flags, newname);
+
+			if (connector_push(buf))
+				msg("[*] IDA Sync> Successfully pushed func name at address 0x%08x to server.\n", addr);
+		}
+
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
+//-----------------------------------------------------------------------------
+// Function:  idb_event_callback
+// Hook the HT_IDB .
+// automatic push the comment to the server ,and no more need the extra hotkeys
+//
+int idaapi idb_event_callback (void *user_data, int notif_code, va_list va)
+{
+	char buf     [MAXSTR+128];
+	char comment [MAXSTR];
+	char title   [128];
+
+
+	memset(buf,     0, sizeof(buf));
+	memset(comment, 0, sizeof(comment));
+	memset(title,   0, sizeof(title));
+
+	ea_t addr = va_arg(va,ea_t);
+
+	switch (notif_code)
+	{
+	case idb_event::changing_cmt:							//called
+		//get_cmt(addr,true,comment,sizeof(comment)-1);
+		//msg("Calling changing_cmt at addr %X  and comment is %s \n",addr,comment);
+		break;
+	case idb_event::cmt_changed:							//called
+		if (get_cmt(addr,true,comment,sizeof(comment)-1) > 0)
+		{
+			//msg("[*] IDA Sync>  Set repeatable comment at addr %08X and comment is %s.\n",addr,comment); 
+			// push the entered comment to the server.
+			
+			qsnprintf(buf, sizeof(buf) - 1, "%d:::%08x:::%s", IDA_SYNC_COMMAND_REP_COMMENT, addr, comment);
+			if (connector_push(buf))
+			{
+				msg("[*] IDA Sync> Successfully pushed repeatable comment at address 0x%08x to server.\n", addr);
+			} else {
+				msg("[*] IDA Sync> Failed pushed repeatable comment at address 0x%08x to server.\n", addr);
+			}
+		}
+		if (get_cmt(addr,false,comment,sizeof(comment)-1) > 0)
+		{
+			//msg("[*] IDA Sync>  Set nonrepeatable at addr %08X and comment is %s.\n",addr,comment);  
+			// push the entered comment to the server.
+			qsnprintf(buf, sizeof(buf) - 1, "%d:::%08x:::%s", IDA_SYNC_COMMAND_REG_COMMENT, addr, comment);
+			if (connector_push(buf))
+			{
+				msg("[*] IDA Sync> Successfully pushed nonrepeatable comment at address 0x%08x to server.\n", addr);
+			} else {
+				msg("[*] IDA Sync> Failed pushed nonrepeatable comment at address 0x%08x to server.\n", addr);
+			}
+		}
+		break;
+	case idb_event::struc_cmt_changed:
+		msg("[*] IDA Sync> callback struc_cmt_changed.\n");
+		break;
+	case idb_event::area_cmt_changed:
+		msg("[*] IDA Sync> callback area_cmt_changed.\n");
+		break;
+	case idb_event::changing_area_cmt:
+		msg("[*] IDA Sync> callback changing_area_cmt.\n");
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
+
+
 //-----------------------------------------------------------------------------
 // Function:  is_my_func_name
 // check if the function name is a dummy name
@@ -73,6 +203,7 @@ int initPlugin(void)
 	char szBuffer[MAXSTR];
 	char sdkVersion[32];
 	int nRetCode = PLUGIN_OK;
+
 	HINSTANCE hInstance = ::GetModuleHandle(NULL);
 
 	// Initialize global strings
@@ -103,10 +234,15 @@ int initPlugin(void)
 			"  Please check the Edit/Plugins menu for more informaton.\n",
 			gszWantedName, gszVersion, gszWantedHotKey);
 	}
-	msg("\n[*] ida_sync initialized. Compiled on " __DATE__ "\n");
+	//hook the idb change notification in ord to automatic push the comment to the server 
+	hook_to_notification_point(HT_IDB,idb_event_callback,NULL);
+	hook_to_notification_point(HT_IDP,idp_event_callback,NULL);
+
+	msg("\n[*] IDA_SYNC initialized. Compiled on " __DATE__ "\n");
 	msg("[*] Pedram Amini <pedram.amini@gmail.com>\n\n");
-	msg("[*] Fix By obaby <root@h4ck.ws>\n"
+	msg("[*] Rebuild and Fix By obaby <root@h4ck.ws>\n"
 			"--------------------------------------------------------------------------------------\n");
+
 	
 	return nRetCode;
 }
@@ -119,6 +255,10 @@ int initPlugin(void)
 //-----------------------------------------------------------------------------
 void termPlugin(void)
 {
+	//unload the hook function
+	unhook_from_notification_point(HT_IDB,idb_event_callback,NULL);
+	unhook_from_notification_point(HT_IDP,idp_event_callback,NULL);
+
 	connector->cleanup();
 }
 
@@ -256,7 +396,7 @@ bool connector_pull (void)
 	// parse the inbound request. if we can't extract the correct fields, return.
 	if (sscanf(buf, "%d:::%08x:::%1023[^\0]", &command, &address, data) != 3)
 		return true;
-
+	//msg("[!] IDA Sync> Received data %s.\n",buf);
 	//
 	// handle the received command appropriately.
 	//
@@ -366,6 +506,31 @@ bool connector_pull (void)
 				msg("[*] IDA Sync> Add breakpoint at address @%08x: failed.\n", address);
 			}	
 		}
+		break;
+	case IDA_SYNC_COMMAND_NORMAL_NAME:
+		if (sscanf(data,"%08x*%1023[^0]", &name_flags, name) != 2)
+		{
+			msg("[!] IDA Sync> Received invalid normal name command.\n");
+			break;
+		}
+
+		msg("[*] IDA Sync> Received new normal name @%08x: %s\n", address, name);
+		set_name(address, name, name_flags);
+		break;
+
+	case IDA_SYNC_COMMAND_FUNC_NAME:
+		if (sscanf(data,"%08x*%1023[^0]", &name_flags, name) != 2)
+		{
+			msg("[!] IDA Sync> Received invalid function name command.\n");
+			break;
+		}
+
+		/*msg("[*] IDA Sync> Received new stack variable name @%08x: %s\n", address, name);
+		stk_frame = get_frame(address);
+		set_member_name(stk_frame, offset, name);*/
+		msg("[*] IDA Sync> Received new function name @%08x: %s\n", address, name);
+		set_name(address, name, name_flags);
+		
 		break;
 
 	default:

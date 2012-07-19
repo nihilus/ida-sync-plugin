@@ -52,6 +52,7 @@
 
 #define PLUGIN_NAME   "ida_sync"
 
+
 //
 // class definition.
 //
@@ -207,11 +208,42 @@ void IDAconnector::server_connect (void)
     memset(server_addr, 0, sizeof(server_addr));
     memset(username,    0, sizeof(username));
 
+	//load config
+	char  idbpath[512] ={0};
+	char * configFile;
+	FILE * filehandel ;
+	
+	qstrncpy(idbpath,database_idb,sizeof(database_idb));
+	idbpath[strlen(idbpath)-4]='\0';//Trim the ".idb" file ext
+	configFile = strcat(idbpath,".cfg");
+	filehandel = qfopen(configFile,"r");
+	if (filehandel)
+	{
+		msg("[*] IDA Sync> Loading config now......\n");
+		qfgets(server_addr,sizeof(server_addr)-1,filehandel);
+		server_addr[strlen(server_addr)-1] = '\0';
+		msg("[*] IDA Sync> Get server IP address %s.\n",server_addr);
+		qfgets(username,sizeof(username)-1,filehandel);
+		username[strlen(username) -1] = '\0';
+		msg("[*] IDA Sync> Get username %s.\n",username);
+		qfgets(password,sizeof(password)-1,filehandel);
+		password[strlen(password) -1] ='\0';
+		msg("[*] IDA Sync> Get password %s.\n",password);
+		qfgets(project,sizeof(project)-1,filehandel);
+		project[strlen(project) -1 ] ='\0';
+		msg("[*] IDA Sync> Get project name %s.\n",project);
+		qfclose(filehandel);
+		msg("[*] IDA Sync> Config Loaded. Click OK to connect.\n");
+		} else {
+		msg("[*] IDA Sync> Can't open the connection config file %s.\n",configFile);
+	}	
+
     // if we are already connected then do nothing.
     if (connected)
         return;
 
     // prompt the user for server connection information..
+	//qstrncpy(server_addr,"192.168.40.84",sizeof(server_addr));
     if (!AskUsingForm_c(dialog_format, server_addr, &port, username, password, project))
     {
         msg("[!] "PLUGIN_NAME"> Connection cancelled.\n");
@@ -356,6 +388,35 @@ void IDAconnector::server_connect (void)
     // asynchronous connection to server established. raise the connected flag.
     msg("[*] "PLUGIN_NAME"> Successfully registered project '%s' with server as '%s'\n", project, username);
     connected = true;
+
+	//Write the config file
+	filehandel = qfopen(configFile,"w");
+	if (filehandel)
+	{
+		char *linebreak = "\n";
+		char *host;
+		char *hostport;
+		char *user_name;
+		char *passwd;
+		char *proj;
+
+		msg("[*] IDA Sync> Saving config now......\n");
+		host = strcat(server_addr,linebreak);
+		qfputs(host,filehandel);
+		user_name = strcat(username,linebreak);
+		qfputs(user_name,filehandel);
+		passwd = strcat(password,linebreak);
+		qfputs(passwd,filehandel);
+		proj = strcat(project,linebreak);
+		qfputs(proj,filehandel);
+		qfputs("5401",filehandel);
+
+		qfclose(filehandel);
+		msg("[*] IDA Sync> Config have been saved.\n");
+		} else {
+		msg("[*] IDA Sync> Can't open the connection config file %s.\n",configFile);
+	}	
+
 }
 
 
